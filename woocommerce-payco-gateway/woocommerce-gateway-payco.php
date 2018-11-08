@@ -242,6 +242,12 @@ function woocommerce_payco_init() {
 			$order = new WC_Order( $order_id );
 			$txnid = $order->order_key;
 			$total=round($order->order_total,2);
+			
+			// Info de usuario de wordpress
+			$current_user = wp_get_current_user();
+			// User Name and last Name
+			$username = $current_user->user_firstname." ".$current_user->user_lastname;
+			// username login -> $current_user->user_login si se necesita
 
 			$redirect_url = ($this->redirect_page_id=="" || $this->redirect_page_id==0)?get_site_url() . "/":get_permalink($this->redirect_page_id);
 			$redirect_url = add_query_arg( 'wc-api', get_class( $this ), $redirect_url );
@@ -283,8 +289,8 @@ function woocommerce_payco_init() {
 				'p_url_response'    => $redirect_url,
 				'p_url_confirmation'=> $redirect_url,
 				'p_customer_ip'		=> $_SERVER['REMOTE_ADDR'],
-				'p_extra1'			=> "plugin_woocommerce",
-				'p_extra2'			=> "",
+				'p_extra1'			=> "Usuario: $username", // Nombre del usuario
+				'p_extra2'			=> "No. Orden: #$order_id", // Numero de orden de woocommerce
 				'p_extra3'			=> "",
 			);
 			return $payco_args;
